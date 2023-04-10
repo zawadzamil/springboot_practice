@@ -1,0 +1,96 @@
+package com.example.practice.controller;
+
+import com.example.practice.dto.BlogDTO;
+import com.example.practice.enums.StatusEnum;
+import com.example.practice.model.Blog;
+import com.example.practice.service.BlogService;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/blogs")
+@AllArgsConstructor
+public class BlogController {
+
+    private BlogService blogService;
+
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestBody @Valid BlogDTO blogDTO) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                    "message", "Blog created successfully.",
+                    "data", blogService.create(blogDTO)
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                    "message", "Slug must be unique"
+            ));
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getAll(@RequestParam(value = "id", defaultValue = "0") int id,
+                                    @RequestParam(value = "page", defaultValue = "0") int page,
+                                    @RequestParam(value = "size", defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.getAll(id, pageRequest));
+    }
+
+    @GetMapping("/private")
+    public ResponseEntity<?> getAllPrivate(@RequestParam(value = "id", defaultValue = "0") int id,
+                                           @RequestParam(value = "page", defaultValue = "0") int page,
+                                           @RequestParam(value = "size", defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.getAllPrivate(id, pageRequest));
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> getInfo(@RequestParam("id") int id){
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                "data",blogService.getInfo(id)
+        ));
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<?> update(@RequestParam("id") int id, @RequestBody Blog blog) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                    "message", "Blog updated successfully.",
+                    "data", blogService.update(id, blog)
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                    "message", "Slug must be unique"
+            ));
+        }
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<?> delete (@RequestParam("id") int id){
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                "message", blogService.delete(id)
+        ));
+    }
+
+    @PutMapping("/publish")
+    public ResponseEntity<?> publish (@RequestParam("id") int id){
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                "message", blogService.publish(id, StatusEnum.PUBLISHED)
+        ));
+    }
+
+    @PutMapping("/unpublish")
+    public ResponseEntity<?> unpublish (@RequestParam("id") int id){
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                "message", blogService.publish(id, StatusEnum.UNPUBLISHED)
+        ));
+    }
+}
