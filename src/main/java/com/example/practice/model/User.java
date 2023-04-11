@@ -2,23 +2,24 @@ package com.example.practice.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Entity
-@Builder
-public class User implements Serializable {
+@Getter
+@Setter
+public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -56,7 +57,5 @@ public class User implements Serializable {
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-
-
 
 }

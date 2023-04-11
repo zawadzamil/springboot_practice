@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
 @Service
 @AllArgsConstructor
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     public User saveAndUpdate(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO,user);
