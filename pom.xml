@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>crud-example</artifactId>
+	<artifactId>practice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>crud-example</name>
 	<description>crud-example</description>
@@ -71,6 +71,7 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.11</version>
 		</dependency>
+
 	</dependencies>
 
 
