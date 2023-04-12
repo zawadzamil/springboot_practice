@@ -28,7 +28,7 @@ public class Leave {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @NotNull(message = "Job Nature is required")
+    @NotNull(message = "Leave Nature is required")
     @Enumerated(EnumType.STRING)
     private LeaveNature natureOfLeave;
 
