@@ -56,6 +56,7 @@ public class Job {
     private String experience;
 
     private boolean active = false;
+
     @JsonProperty(access = READ_ONLY)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
