@@ -20,17 +20,7 @@ public class RoleController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody @Valid RoleDTO roleDTO){
-       try{
-           return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                   "message","Role Created Successfully.",
-                   "data",roleService.saveAndUpdate(roleDTO)
-           ));
-       }
-       catch (Exception exception){
-        return  ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
-                "message","Role must be unique"
-        ));
-       }
+        return ResponseEntity.status(HttpStatus.OK).body(roleService.saveAndUpdate(roleDTO));
     }
 
     @GetMapping("/")

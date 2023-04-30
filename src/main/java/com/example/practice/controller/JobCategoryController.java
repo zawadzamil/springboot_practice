@@ -19,21 +19,13 @@ import java.util.Map;
 public class JobCategoryController {
 
     private JobCategoryService jobCategoryService;
+
     @PostMapping("create")
-    public ResponseEntity<?> create (@RequestBody @Valid JobCategoryDTO jobCategory){
-       try {
-           return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                   "message", "Job category created successfully",
-                   "data", jobCategoryService.create(jobCategory)
-           ));
-       }
-       catch (Exception e) {
-           return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
-                   "message", "Slug must be unique."
-           ));
-       }
+    public ResponseEntity<?> create(@RequestBody @Valid JobCategoryDTO jobCategory) {
+        return ResponseEntity.status(HttpStatus.OK).body(jobCategoryService.create(jobCategory));
     }
-@GetMapping("/list")
+
+    @GetMapping("/list")
     public ResponseEntity<?> getAll(@RequestParam(value = "id", defaultValue = "0") int id,
                                     @RequestParam(value = "page", defaultValue = "0") int page,
                                     @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -43,29 +35,12 @@ public class JobCategoryController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> update(@RequestParam("id") int id, @RequestBody JobCategory jobCategory){
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                    "message","Job Category updated successfully.",
-                    "data",jobCategoryService.update(id, jobCategory)
-            ));
-        }
-        catch (Exception e) {
-           if(e instanceof ResourceNotFoundException){
-               return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
-                       "message",e.getMessage()
-               ));
-           }
-           else{
-               return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
-                       "message","Slug / Name must be unique" + e.toString()
-               ));
-           }
-        }
+    public ResponseEntity<?> update(@RequestParam("id") int id, @RequestBody JobCategory jobCategory) {
+        return ResponseEntity.status(HttpStatus.OK).body(jobCategoryService.update(id, jobCategory));
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<?>  delete(@RequestParam("id") int id){
+    public ResponseEntity<?> delete(@RequestParam("id") int id) {
         return ResponseEntity.status(HttpStatus.OK).body(Map.of(
                 "message", jobCategoryService.delete(id)
         ));

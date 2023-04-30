@@ -1,6 +1,7 @@
 package com.example.practice.service;
 
 import com.example.practice.dto.JobDTO;
+import com.example.practice.exceptions.ResourceAlreadyExistException;
 import com.example.practice.exceptions.ResourceNotFoundException;
 import com.example.practice.model.Job;
 import com.example.practice.model.JobCategory;
@@ -19,8 +20,12 @@ public class JobService {
     private final JobCategoryRepository jobCategoryRepository;
 
     public Job create(JobDTO jobDTO) {
-        Job job = new Job();
+        Job existingJob = jobRepository.findBySlug(jobDTO.getSlug());
 
+        if(existingJob != null){
+            throw new ResourceAlreadyExistException("Slug must be unique");
+        }
+        Job job = new Job();
         BeanUtils.copyProperties(jobDTO,job);
         if(jobDTO.getCategory() != 0){
             JobCategory jobCategory = jobCategoryRepository.findById(jobDTO.getCategory()).orElseThrow(()-> new ResourceNotFoundException("Job category not found"));
@@ -39,6 +44,12 @@ public class JobService {
     }
 
     public Job update(int id,Job job){
+
+        Job existingJob = jobRepository.findBySlug(job.getSlug());
+
+        if(existingJob != null && existingJob.getId() != id){
+            throw new ResourceAlreadyExistException("Slug must be unique");
+        }
 
         return jobRepository.findById(id).map(item ->{
             item.setTitle(job.getTitle());

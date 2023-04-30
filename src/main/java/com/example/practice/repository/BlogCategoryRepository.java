@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BlogCategoryRepository extends JpaRepository<BlogCategory,Integer> {
+    BlogCategory findBySlug(String slug);
 }

@@ -23,16 +23,7 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody @Valid UserDTO userDTO) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                    "message", "User created successfully.",
-                    "data", userService.create(userDTO)
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
-                    "message", "Username already exists."
-            ));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(userService.create(userDTO));
     }
 
     @GetMapping("/list")
@@ -46,22 +37,7 @@ public class UserController {
 
     @PutMapping("/update/profile")
     public ResponseEntity<?> updateProfile(@RequestParam("id") int id, @RequestBody() User user) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                    "message", "Profile updated successfully",
-                    "data", userService.update(id, user)
-            ));
-        } catch (Exception e) {
-            if (e instanceof ResourceNotFoundException) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
-                        "message", e.getMessage()
-                ));
-            } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
-                        "message", "Username must be unique"
-                ));
-            }
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(userService.update(id, user));
     }
 
     @DeleteMapping("/")

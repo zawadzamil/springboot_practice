@@ -21,10 +21,7 @@ public class LeaveController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create (@RequestBody @Valid LeaveDTO leaveDTO){
-        return  ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                "message", "Leave application created successfully.",
-                "data", leaveService.create(leaveDTO)
-        ));
+        return  ResponseEntity.status(HttpStatus.OK).body(leaveService.create(leaveDTO));
     }
 
     @GetMapping("/list")
@@ -73,10 +70,7 @@ public class LeaveController {
 
     @PutMapping("/")
     public ResponseEntity<?> update(@RequestParam("id") int id, @RequestBody Leave leave){
-            return  ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                    "message" , "Leave application updated",
-                    "data" , leaveService.update(id,leave)
-            ));
+            return  ResponseEntity.status(HttpStatus.OK).body( leaveService.update(id,leave));
     }
 
     @DeleteMapping("/")

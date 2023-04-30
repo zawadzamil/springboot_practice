@@ -22,16 +22,7 @@ public class BlogController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody @Valid BlogDTO blogDTO) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                    "message", "Blog created successfully.",
-                    "data", blogService.create(blogDTO)
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
-                    "message", "Slug must be unique"
-            ));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.create(blogDTO));
     }
 
     @GetMapping("/list")
@@ -54,23 +45,12 @@ public class BlogController {
 
     @GetMapping("/info")
     public ResponseEntity<?> getInfo(@RequestParam("id") int id){
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                "data",blogService.getInfo(id)
-        ));
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.getInfo(id));
     }
 
     @PutMapping("/")
     public ResponseEntity<?> update(@RequestParam("id") int id, @RequestBody Blog blog) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                    "message", "Blog updated successfully.",
-                    "data", blogService.update(id, blog)
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
-                    "message", "Slug must be unique"
-            ));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.update(id, blog));
     }
 
     @DeleteMapping("/")
@@ -82,9 +62,7 @@ public class BlogController {
 
     @PutMapping("/publish")
     public ResponseEntity<?> publish (@RequestParam("id") int id){
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                "message", blogService.publish(id, StatusEnum.PUBLISHED)
-        ));
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.publish(id, StatusEnum.PUBLISHED));
     }
 
     @PutMapping("/unpublish")

@@ -20,10 +20,7 @@ public class BlogCategoryController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody @Valid BlogCategoryDTO blogCategoryDTO){
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                "message", "Blog category created successfully.",
-                "data", blogCategoryService.create(blogCategoryDTO)
-        ));
+        return ResponseEntity.status(HttpStatus.OK).body(blogCategoryService.create(blogCategoryDTO));
     }
 
     @GetMapping("/list")
@@ -37,23 +34,11 @@ public class BlogCategoryController {
 
     @PutMapping("/")
     public ResponseEntity<?> update(int id, @RequestBody @Valid BlogCategory blogCategory){
-      try {
-          return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                  "message" , "Blog Category updated successfully",
-                  "data", blogCategoryService.update(id, blogCategory)
-          ));
-      }
-      catch (Exception e) {
-          return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
-                  "message" , "Slug must be unique."
-          ));
-      }
+        return ResponseEntity.status(HttpStatus.OK).body(blogCategoryService.update(id, blogCategory));
     }
 
     @DeleteMapping("/")
     public ResponseEntity<?> delete(@RequestParam("id") int id){
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                "message" , blogCategoryService.delete(id)
-        ));
+        return ResponseEntity.status(HttpStatus.OK).body(blogCategoryService.delete(id));
     }
 }
