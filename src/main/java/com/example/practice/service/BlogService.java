@@ -8,11 +8,15 @@ import com.example.practice.model.Blog;
 import com.example.practice.model.BlogCategory;
 import com.example.practice.repository.BlogCategoryRepository;
 import com.example.practice.repository.BlogRepository;
+import com.example.practice.repository.specification.BlogSpecification;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 @AllArgsConstructor
@@ -36,8 +40,19 @@ public class BlogService {
         return blogRepository.save(blog);
     }
 
-    public Page<Blog> getAll(int id, PageRequest pageRequest) {
-        return blogRepository.findByStatus(StatusEnum.PUBLISHED, pageRequest);
+    public Page<Blog> getAll(int id,
+                             String title,
+                             String slug,
+                             PageRequest pageRequest) {
+        Specification<Blog> matchId = BlogSpecification.matchId(id);
+        Specification<Blog> status = BlogSpecification.checkByStatus(true);
+        Specification<Blog> titleSpecification = BlogSpecification.checkByTitle(title);
+
+        Specification<Blog> specification = where(matchId)
+                .and(status)
+                .and(titleSpecification);
+
+        return  blogRepository.findAll(specification, pageRequest);
     }
 
     public Page<Blog> getAllPrivate(int id, PageRequest pageRequest) {

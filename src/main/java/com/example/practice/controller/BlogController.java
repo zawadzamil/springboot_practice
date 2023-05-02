@@ -27,11 +27,13 @@ public class BlogController {
 
     @GetMapping("/list")
     public ResponseEntity<?> getAll(@RequestParam(value = "id", defaultValue = "0") int id,
+                                    @RequestParam(value = "title", defaultValue = "") String title,
+                                    @RequestParam(value = "slug", defaultValue = "") String slug,
                                     @RequestParam(value = "page", defaultValue = "0") int page,
                                     @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        return ResponseEntity.status(HttpStatus.OK).body(blogService.getAll(id, pageRequest));
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.getAll(id,title,slug, pageRequest));
     }
 
     @GetMapping("/private")
