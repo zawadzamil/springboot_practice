@@ -40,9 +40,9 @@ public class Blog {
     @ElementCollection(targetClass = String.class)
     private List<String> tags;
 
-    @JsonProperty(access =  JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ManyToOne
-    @JoinTable(name = "blog_blogCategory",joinColumns = @JoinColumn(name = "blog_id"), inverseJoinColumns = @JoinColumn(name = "blogcategory_id"))
+    @JoinColumn(name = "category_id")
     private BlogCategory category;
 
 

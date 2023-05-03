@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
 
 public class BlogSpecification {
 
@@ -42,8 +43,8 @@ public class BlogSpecification {
             if (StringUtils.isEmpty(category)) {
                 return criteriaBuilder.conjunction();
             } else {
-                Join<Blog, BlogCategory> categoryJoin = blogRoot.join("category", JoinType.LEFT);
-                return criteriaBuilder.equal(categoryJoin.get("name"), category);
+                Path<BlogCategory> category1 = blogRoot.get("category");
+                return  criteriaBuilder.equal(category1.get("name"),category);
             }
         };
     }
