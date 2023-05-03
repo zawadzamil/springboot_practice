@@ -16,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
@@ -43,14 +45,14 @@ public class BlogService {
     public Page<Blog> getAll(int id,
                              String title,
                              String slug,
-                             String tag,
+                             List<String> tags,
                              String category,
                              PageRequest pageRequest) {
         Specification<Blog> matchId = BlogSpecification.matchId(id);
         Specification<Blog> status = BlogSpecification.checkByStatus(StatusEnum.PUBLISHED);
         Specification<Blog> titleSpecification = BlogSpecification.checkByTitle(title);
         Specification<Blog> slugSpecification = BlogSpecification.checkBySlug(slug);
-        Specification<Blog> tagSpecification = BlogSpecification.checkByTags(tag);
+        Specification<Blog> tagSpecification = BlogSpecification.checkByTags(tags);
         Specification<Blog> categorySpecification = BlogSpecification.checkByCategory(category);
 
         Specification<Blog> specification = where(matchId)

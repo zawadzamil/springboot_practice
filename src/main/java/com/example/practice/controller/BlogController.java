@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,7 +31,7 @@ public class BlogController {
                                     @RequestParam(value = "title", defaultValue = "") String title,
                                     @RequestParam(value = "slug", defaultValue = "") String slug,
                                     @RequestParam(value = "page", defaultValue = "0") int page,
-                                    @RequestParam(value = "tag", defaultValue = "") String tag,
+                                    @RequestParam(value = "tags", defaultValue = "") List<String> tags,
                                     @RequestParam(value = "category" ,defaultValue = "") String category,
                                     @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
@@ -38,7 +39,7 @@ public class BlogController {
         return ResponseEntity.status(HttpStatus.OK).body(blogService.getAll(id,
                 title,
                 slug,
-                tag,
+                tags,
                 category,
                 pageRequest));
     }
