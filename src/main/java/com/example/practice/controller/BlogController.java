@@ -31,6 +31,7 @@ public class BlogController {
                                     @RequestParam(value = "slug", defaultValue = "") String slug,
                                     @RequestParam(value = "page", defaultValue = "0") int page,
                                     @RequestParam(value = "tag", defaultValue = "") String tag,
+                                    @RequestParam(value = "category" ,defaultValue = "") String category,
                                     @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
@@ -38,6 +39,7 @@ public class BlogController {
                 title,
                 slug,
                 tag,
+                category,
                 pageRequest));
     }
 

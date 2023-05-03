@@ -2,8 +2,12 @@ package com.example.practice.repository.specification;
 
 import com.example.practice.enums.StatusEnum;
 import com.example.practice.model.Blog;
+import com.example.practice.model.BlogCategory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 
 public class BlogSpecification {
 
@@ -31,5 +35,16 @@ public class BlogSpecification {
 
     public static Specification<Blog> checkByTags(String tag){
         return (blogRoot, criteriaQuery, criteriaBuilder)-> StringUtils.isEmpty(tag) ? criteriaBuilder.conjunction() : criteriaBuilder.isMember(tag, blogRoot.get("tags"));
+    }
+
+    public static Specification<Blog> checkByCategory(String category){
+        return (blogRoot, criteriaQuery, criteriaBuilder)->{
+            if (StringUtils.isEmpty(category)) {
+                return criteriaBuilder.conjunction();
+            } else {
+                Join<Blog, BlogCategory> categoryJoin = blogRoot.join("category", JoinType.LEFT);
+                return criteriaBuilder.equal(categoryJoin.get("name"), category);
+            }
+        };
     }
 }

@@ -44,17 +44,20 @@ public class BlogService {
                              String title,
                              String slug,
                              String tag,
+                             String category,
                              PageRequest pageRequest) {
         Specification<Blog> matchId = BlogSpecification.matchId(id);
         Specification<Blog> status = BlogSpecification.checkByStatus(StatusEnum.PUBLISHED);
         Specification<Blog> titleSpecification = BlogSpecification.checkByTitle(title);
         Specification<Blog> slugSpecification = BlogSpecification.checkBySlug(slug);
         Specification<Blog> tagSpecification = BlogSpecification.checkByTags(tag);
+        Specification<Blog> categorySpecification = BlogSpecification.checkByCategory(category);
 
         Specification<Blog> specification = where(matchId)
                 .and(status)
                 .and(slugSpecification)
                 .and(tagSpecification)
+                .and(categorySpecification)
                 .and(titleSpecification);
 
         return  blogRepository.findAll(specification, pageRequest);
