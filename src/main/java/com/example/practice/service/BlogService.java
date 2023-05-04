@@ -16,6 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.data.jpa.domain.Specification.where;
@@ -47,6 +50,10 @@ public class BlogService {
                              String slug,
                              List<String> tags,
                              String category,
+                             Date fromDate,
+                             Date toDate,
+                             Date upper,
+                             Date lower,
                              PageRequest pageRequest) {
         Specification<Blog> matchId = BlogSpecification.matchId(id);
         Specification<Blog> status = BlogSpecification.checkByStatus(StatusEnum.PUBLISHED);
@@ -55,11 +62,23 @@ public class BlogService {
         Specification<Blog> tagSpecification = BlogSpecification.checkByTags(tags);
         Specification<Blog> categorySpecification = BlogSpecification.checkByCategory(category);
 
+        LocalDateTime localDateTimeFrom = LocalDateTime.ofInstant(fromDate.toInstant(), ZoneId.systemDefault());
+        LocalDateTime localDateTimeTo = LocalDateTime.ofInstant(toDate.toInstant(), ZoneId.systemDefault());
+        LocalDateTime localDateTimeUpperBound = LocalDateTime.ofInstant(upper.toInstant(), ZoneId.systemDefault());
+        LocalDateTime localDateTimeLowerBound= LocalDateTime.ofInstant(lower.toInstant(), ZoneId.systemDefault());
+
+        Specification<Blog> dateRangeSpecification = BlogSpecification.checkByDateRange(localDateTimeFrom,localDateTimeTo);
+        Specification<Blog> uperRangeSpecification = BlogSpecification.checkByUperRange(localDateTimeUpperBound);
+        Specification<Blog> lowerrRangeSpecification = BlogSpecification.checkByLowerRange(localDateTimeLowerBound);
+
         Specification<Blog> specification = where(matchId)
                 .and(status)
                 .and(slugSpecification)
                 .and(tagSpecification)
                 .and(categorySpecification)
+                .and(dateRangeSpecification)
+                .and(uperRangeSpecification)
+                .and(lowerrRangeSpecification)
                 .and(titleSpecification);
 
         return  blogRepository.findAll(specification, pageRequest);
