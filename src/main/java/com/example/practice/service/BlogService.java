@@ -9,11 +9,16 @@ import com.example.practice.model.BlogCategory;
 import com.example.practice.repository.BlogCategoryRepository;
 import com.example.practice.repository.BlogRepository;
 import com.example.practice.repository.specification.BlogSpecification;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,9 +30,11 @@ import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class BlogService {
     private final BlogRepository blogRepository;
     private final BlogCategoryRepository blogCategoryRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public Blog create(BlogDTO blogDTO) {
         Blog existingBlog = blogRepository.findBySlug(blogDTO.getSlug());
@@ -44,6 +51,7 @@ public class BlogService {
 
         return blogRepository.save(blog);
     }
+
 
     public Page<Blog> getAll(int id,
                              String title,
@@ -118,8 +126,26 @@ public class BlogService {
         }).orElseThrow(() -> new ResourceNotFoundException("Blog not found"));
     }
 
-    public Blog getInfo(int id) {
-        return blogRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Blog not found"));
+
+    public Blog getInfo(int id) throws JsonProcessingException {
+        var key = "blog_" + id;
+        final ValueOperations<String, String> operations = redisTemplate.opsForValue();
+        final boolean hasKey = Boolean.TRUE.equals(redisTemplate.hasKey(key));
+        ObjectMapper mapper = new ObjectMapper();
+        if (hasKey) {
+
+            final String post = operations.get(key);
+            Blog blogPost = mapper.readValue(post, Blog.class);
+            log.info("Cache Hit!");
+            return blogPost;
+        }
+        else{
+            log.info("Cache Miss!");
+            Blog post = blogRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Blog not found"));
+            operations.set(key, mapper.writeValueAsString(post)); // add the new key to the cache
+            return post;
+        }
     }
 
 }

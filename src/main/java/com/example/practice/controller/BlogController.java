@@ -4,7 +4,9 @@ import com.example.practice.dto.BlogDTO;
 import com.example.practice.enums.StatusEnum;
 import com.example.practice.model.Blog;
 import com.example.practice.service.BlogService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/blogs")
 @AllArgsConstructor
+@EnableCaching
 public class BlogController {
 
     private BlogService blogService;
@@ -70,8 +73,9 @@ public class BlogController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<?> getInfo(@RequestParam("id") int id) {
-        return ResponseEntity.status(HttpStatus.OK).body(blogService.getInfo(id));
+    public ResponseEntity<?> getInfo(@RequestParam("id") int id) throws JsonProcessingException {
+        Blog blog = blogService.getInfo(id);
+        return ResponseEntity.status(HttpStatus.OK).body(blog);
     }
 
     @PutMapping("/")
