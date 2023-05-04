@@ -73,6 +73,6 @@ public class BlogSpecification {
     }
 
     public static Specification<Blog> checkByLowerRange(LocalDateTime lowerBound){
-        return (blogRoot,criteriaQuery,criteriaBuilder)-> criteriaBuilder.greaterThan(blogRoot.get("createdAt"),lowerBound);
+        return (blogRoot,criteriaQuery,criteriaBuilder)-> criteriaBuilder.greaterThanOrEqualTo(blogRoot.get("createdAt"),lowerBound);
     }
 }

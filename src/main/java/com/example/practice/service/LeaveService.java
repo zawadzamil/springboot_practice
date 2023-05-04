@@ -22,7 +22,7 @@ public class LeaveService {
     public Leave create (LeaveDTO leaveDTO){
        Leave leave = new Leave();
         BeanUtils.copyProperties(leaveDTO,leave);
-        User user = userRepository.findById(43).orElseThrow(()-> new ResourceNotFoundException("User not found"));
+        User user = userRepository.findById(50).orElseThrow(()-> new ResourceNotFoundException("User not found"));
         leave.setUser(user);
         return leaveRepository.save(leave);
     }

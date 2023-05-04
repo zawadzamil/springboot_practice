@@ -3,11 +3,14 @@ package com.example.practice.model;
 import com.example.practice.enums.LeaveNature;
 import com.example.practice.enums.LeaveStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -53,9 +56,10 @@ public class Leave {
     @Enumerated(EnumType.STRING)
     private LeaveStatus status = LeaveStatus.PENDING;
 
-    @JsonProperty(access =  JsonProperty.Access.READ_ONLY)
-    @ManyToOne
-    @JoinTable(name = "leave_user",joinColumns = @JoinColumn(name = "leave_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
 
@@ -77,6 +81,4 @@ public class Leave {
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-
-
 }
