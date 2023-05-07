@@ -51,7 +51,7 @@ public class Blog implements Serializable {
 
     @JsonProperty(access = READ_ONLY)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createdAt;
 
     @JsonProperty(access = READ_ONLY)
